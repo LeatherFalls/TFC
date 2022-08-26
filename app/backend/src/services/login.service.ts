@@ -11,9 +11,11 @@ class LoginService {
       where: { email },
     }) || { password: '' };
 
-    const { password: userPassword, ...userWithoutPassword } = user;
+    const { password, ...userWithoutPassword } = user;
 
-    const generateToken = (
+    console.log(userWithoutPassword);
+
+    return (
       jwt.sign(
         userWithoutPassword,
         process.env.JWT_SECRET as string,
@@ -23,20 +25,16 @@ class LoginService {
         },
       )
     );
-
-    return generateToken;
   };
 
-  public verifyToken = async (token: string) => {
-    const verifyUserToken = jwt.verify(token, process.env.JWT_SECRET as string);
+  public verifyToken = async (token: string): Promise<string> => {
+    const verifyUserToken = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
 
     if (!token) throw new UnauthorizedError('Invalid token');
 
-    const { email } = verifyUserToken as jwt.JwtPayload;
-
     const findUser = await Users.findOne({
       raw: true,
-      where: { email },
+      where: { email: verifyUserToken.email },
     }) as Users;
 
     return findUser.role;

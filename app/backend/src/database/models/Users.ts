@@ -5,13 +5,13 @@ import db from '.';
 class Users extends Model {
   public id!: number;
 
-  declare username: string;
+  public username: string;
 
-  declare role: string;
+  public role: string;
 
-  declare email: string;
+  public email: string;
 
-  declare password: string;
+  public password: string;
 }
 
 Users.init({

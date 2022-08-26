@@ -20,7 +20,7 @@ class App {
     this.app.post(
       '/login',
       this._loginMiddleware.requestValidation,
-      /* this._loginMiddleware.loginApprovalValidation, */
+      this._loginMiddleware.loginApprovalValidation,
       this._loginController.login,
     );
     this.app.get(

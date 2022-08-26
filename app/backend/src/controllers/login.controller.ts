@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import UnauthorizedError from '../errors/unauthorized.error';
 import LoginService from '../services/login.service';
 
 class LoginController {
@@ -17,16 +16,18 @@ class LoginController {
     }
   };
 
-  public getProfile:RequestHandler = async (req, res) => {
-    const { authorization: token } = req.headers;
+  public getProfile:RequestHandler = async (req, res, next) => {
+    try {
+      const token = req.headers.authorization;
 
-    if (!token) throw new UnauthorizedError('Invalid token');
+      if (!token) return res.status(401).json({ message: 'Token not found' });
 
-    console.log(token);
+      const role = await this.loginService.verifyToken(token);
 
-    const role = await this.loginService.verifyToken(token);
-
-    return res.status(200).json({ role });
+      return res.status(200).json({ role });
+    } catch (error) {
+      next(error);
+    }
   };
 }
 
