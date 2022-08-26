@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import UnauthorizedError from '../errors/unauthorized.error';
 import LoginService from '../services/login.service';
 
 class LoginController {
@@ -14,6 +15,18 @@ class LoginController {
     } catch (error) {
       next(error);
     }
+  };
+
+  public getProfile:RequestHandler = async (req, res) => {
+    const { authorization: token } = req.headers;
+
+    if (!token) throw new UnauthorizedError('Invalid token');
+
+    console.log(token);
+
+    const role = await this.loginService.verifyToken(token);
+
+    return res.status(200).json({ role });
   };
 }
 
