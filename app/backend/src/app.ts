@@ -1,7 +1,9 @@
 import * as express from 'express';
 import LoginController from './controllers/login.controller';
+import errorMiddleware from './errors/error';
 import LoginMiddleware from './middlewares/login.middleware';
 import LoginService from './services/login.service';
+import 'express-async-errors';
 
 class App {
   public app: express.Express;
@@ -18,8 +20,12 @@ class App {
     this.app.post(
       '/login',
       this._loginMiddleware.requestValidation,
-      this._loginMiddleware.loginApprovalValidation,
+      /* this._loginMiddleware.loginApprovalValidation, */
       this._loginController.login,
+    );
+    this.app.get(
+      '/login/validate',
+      this._loginController.getProfile,
     );
   }
 
@@ -32,6 +38,7 @@ class App {
     };
 
     this.app.use(express.json());
+    this.app.use(errorMiddleware);
     this.app.use(accessControl);
   }
 
