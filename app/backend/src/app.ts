@@ -4,11 +4,14 @@ import errorMiddleware from './errors/error';
 import LoginMiddleware from './middlewares/login.middleware';
 import LoginService from './services/login.service';
 import 'express-async-errors';
+import TeamController from './controllers/team.controller';
+import TeamService from './services/team.service';
 
 class App {
   public app: express.Express;
   private _loginController = new LoginController(new LoginService());
   private _loginMiddleware = new LoginMiddleware();
+  private _teamController = new TeamController(new TeamService());
 
   constructor() {
     this.app = express();
@@ -27,6 +30,8 @@ class App {
       '/login/validate',
       this._loginController.getProfile,
     );
+    this.app.get('/teams', this._teamController.getAllTeams);
+    this.app.get('/teams/:id', this._teamController.getTeamsById);
   }
 
   private config():void {
