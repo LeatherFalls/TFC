@@ -6,12 +6,15 @@ import LoginService from './services/login.service';
 import 'express-async-errors';
 import TeamController from './controllers/team.controller';
 import TeamService from './services/team.service';
+import MatchController from './controllers/matches.controller';
+import MatchService from './services/matches.service';
 
 class App {
   public app: express.Express;
   private _loginController = new LoginController(new LoginService());
   private _loginMiddleware = new LoginMiddleware();
   private _teamController = new TeamController(new TeamService());
+  private _matchController = new MatchController(new MatchService());
 
   constructor() {
     this.app = express();
@@ -32,6 +35,7 @@ class App {
     );
     this.app.get('/teams', this._teamController.getAllTeams);
     this.app.get('/teams/:id', this._teamController.getTeamsById);
+    this.app.get('/matches', this._matchController.getAllMatches);
   }
 
   private config():void {
