@@ -1,40 +1,18 @@
 import * as express from 'express';
-import LoginController from './controllers/login.controller';
 import errorMiddleware from './errors/error';
-import LoginMiddleware from './middlewares/login.middleware';
-import LoginService from './services/login.service';
 import 'express-async-errors';
-import TeamController from './controllers/team.controller';
-import TeamService from './services/team.service';
-import MatchController from './controllers/matches.controller';
-import MatchService from './services/matches.service';
-// import MatchesMiddleware from './middlewares/matches.middleware';
+import loginRouter from './routes/login.route';
+import teamsRouter from './routes/teams.route';
+import matchRouter from './routes/matches.route';
 
 class App {
   public app: express.Express;
-  private _loginController = new LoginController(new LoginService());
-  private _loginMiddleware = new LoginMiddleware();
-  private _teamController = new TeamController(new TeamService());
-  private _matchController = new MatchController(new MatchService(), new TeamService());
-  // private _matchMiddleware = new MatchesMiddleware(new TeamService());
 
   constructor() {
     this.app = express();
     this.config();
 
     this.app.get('/', (req, res) => res.json({ ok: true }));
-    this.app.post(
-      '/login',
-      this._loginMiddleware.requestValidation,
-      this._loginMiddleware.loginApprovalValidation,
-      this._loginController.login,
-    );
-    this.app.get('/login/validate', this._loginController.getProfile);
-    this.app.get('/teams', this._teamController.getAllTeams);
-    this.app.get('/teams/:id', this._teamController.getTeamsById);
-    this.app.get('/matches', this._matchController.getAllMatches);
-    this.app.post('/matches', this._matchController.createMatch);
-    this.app.patch('/matches/:id/finished', this._matchController.isFinished);
   }
 
   private config():void {
@@ -48,6 +26,12 @@ class App {
     this.app.use(express.json());
     this.app.use(errorMiddleware);
     this.app.use(accessControl);
+
+    this.app.use('/login', loginRouter);
+
+    this.app.use('/teams', teamsRouter);
+
+    this.app.use('/matches', matchRouter);
   }
 
   public start(PORT: string | number):void {

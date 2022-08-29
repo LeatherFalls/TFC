@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import TeamsService from '../services/team.service';
+import 'express-async-errors';
 
 export default class MatchesMiddleware {
   constructor(private teamsService: TeamsService) {}
