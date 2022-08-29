@@ -13,8 +13,6 @@ class LoginService {
 
     const { password, ...userWithoutPassword } = user;
 
-    console.log(userWithoutPassword);
-
     return (
       jwt.sign(
         userWithoutPassword,

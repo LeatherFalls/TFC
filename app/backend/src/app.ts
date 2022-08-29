@@ -8,20 +8,20 @@ import TeamController from './controllers/team.controller';
 import TeamService from './services/team.service';
 import MatchController from './controllers/matches.controller';
 import MatchService from './services/matches.service';
+// import MatchesMiddleware from './middlewares/matches.middleware';
 
 class App {
   public app: express.Express;
   private _loginController = new LoginController(new LoginService());
   private _loginMiddleware = new LoginMiddleware();
   private _teamController = new TeamController(new TeamService());
-  private _matchController = new MatchController(new MatchService());
+  private _matchController = new MatchController(new MatchService(), new TeamService());
+  // private _matchMiddleware = new MatchesMiddleware(new TeamService());
 
   constructor() {
     this.app = express();
-
     this.config();
 
-    // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
     this.app.post(
       '/login',
@@ -29,13 +29,12 @@ class App {
       this._loginMiddleware.loginApprovalValidation,
       this._loginController.login,
     );
-    this.app.get(
-      '/login/validate',
-      this._loginController.getProfile,
-    );
+    this.app.get('/login/validate', this._loginController.getProfile);
     this.app.get('/teams', this._teamController.getAllTeams);
     this.app.get('/teams/:id', this._teamController.getTeamsById);
     this.app.get('/matches', this._matchController.getAllMatches);
+    this.app.post('/matches', this._matchController.createMatch);
+    this.app.patch('/matches/:id/finished', this._matchController.isFinished);
   }
 
   private config():void {

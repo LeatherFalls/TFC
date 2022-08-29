@@ -17,6 +17,25 @@ class MatchService {
 
     return matches;
   };
+
+  public createMatch = async (match: Matches): Promise<Matches> => {
+    const data = {
+      ...match,
+      inProgress: true,
+    };
+    const newMatch = await Matches.create(data);
+
+    return newMatch;
+  };
+
+  public isFinished = async (id: number) => {
+    const match = await Matches.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+
+    return match;
+  };
 }
 
 export default MatchService;
