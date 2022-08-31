@@ -9,13 +9,13 @@ import LoginMiddleware from '../middlewares/login.middleware';
 
 const loginService = new LoginService();
 const loginController = new LoginController(loginService);
-const loginMiddleware = new LoginMiddleware();
+const loginMiddleware = new LoginMiddleware(loginService);
 
 const teamsService = new TeamService();
 const teamsController = new TeamsController(teamsService);
 
 const matchService = new MatchService();
-const matchController = new MatchController(matchService);
+const matchController = new MatchController(matchService, loginService);
 const matchMiddleware = new MatchMiddleware(teamsService);
 
 export {

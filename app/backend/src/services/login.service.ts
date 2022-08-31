@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import Users from '../database/models/Users';
-import UnauthorizedError from '../errors/unauthorized.error';
 
 dotenv.config();
 class LoginService {
@@ -27,8 +26,6 @@ class LoginService {
 
   public verifyToken = async (token: string): Promise<string> => {
     const verifyUserToken = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
-
-    if (!token) throw new UnauthorizedError('Invalid token');
 
     const findUser = await Users.findOne({
       raw: true,
