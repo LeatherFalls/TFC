@@ -5,9 +5,18 @@ const router = Router();
 
 router.get('/', matchController.getAllMatches);
 
-router.post('/', matchMiddleware.validation, matchController.createMatch);
+router.post(
+  '/',
+  matchMiddleware.validation,
+  matchController.createMatch,
+);
 
 router.patch('/:id/finish', matchController.isFinished);
+
+router.patch(
+  '/:id',
+  matchController.updateMatch,
+);
 /* class MatchRouter {
   public router: Router;
 

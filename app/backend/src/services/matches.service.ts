@@ -1,5 +1,6 @@
 import Teams from '../database/models/Teams';
 import Matches from '../database/models/Matches';
+import NotFoundError from '../errors/notFound.error';
 
 class MatchService {
   public getAllMatches = async (): Promise<Matches[]> => {
@@ -16,6 +17,12 @@ class MatchService {
     });
 
     return matches;
+  };
+
+  public getById = async (id: number): Promise<Matches | null> => {
+    const match = await Matches.findByPk(id);
+
+    return match;
   };
 
   public createMatch = async (match: Matches): Promise<Matches> => {
@@ -35,6 +42,17 @@ class MatchService {
     );
 
     return match;
+  };
+
+  public updateMatch = async (id: number, homeTeamGoals: number, awayTeamGoals: number) => {
+    const match = await this.getById(id);
+
+    if (!match) throw new NotFoundError('There is no match with such id!');
+
+    await Matches.update({
+      homeTeamGoals,
+      awayTeamGoals,
+    }, { where: { id } });
   };
 }
 
