@@ -4,6 +4,7 @@ import 'express-async-errors';
 import loginRouter from './routes/login.route';
 import teamsRouter from './routes/teams.route';
 import matchRouter from './routes/matches.route';
+import leaderboardRouter from './routes/leaderboard.route';
 
 class App {
   public app: express.Express;
@@ -32,6 +33,8 @@ class App {
     this.app.use('/teams', teamsRouter);
 
     this.app.use('/matches', matchRouter);
+
+    this.app.use('/leaderboard', leaderboardRouter);
   }
 
   public start(PORT: string | number):void {

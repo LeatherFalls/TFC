@@ -6,6 +6,8 @@ import MatchMiddleware from '../middlewares/matches.middleware';
 import LoginService from '../services/login.service';
 import LoginController from '../controllers/login.controller';
 import LoginMiddleware from '../middlewares/login.middleware';
+import LeaderboardService from '../services/leaderboard.service';
+import LeaderboardController from '../controllers/leaderboard.controller';
 
 const loginService = new LoginService();
 const loginController = new LoginController(loginService);
@@ -18,6 +20,9 @@ const matchService = new MatchService();
 const matchController = new MatchController(matchService, loginService);
 const matchMiddleware = new MatchMiddleware(teamsService);
 
+const leaderboardService = new LeaderboardService(teamsService, matchService);
+const leaderboardController = new LeaderboardController(leaderboardService);
+
 export {
   loginService,
   loginController,
@@ -25,4 +30,5 @@ export {
   teamsController,
   matchController,
   matchMiddleware,
+  leaderboardController,
 };
